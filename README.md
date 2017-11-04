@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ### UGL 使用说明 
 
 #### 概述(2017.10.01)
@@ -86,7 +85,7 @@
 
 #### 移植说明(2017.10.04) 
 
- 	虽然理论上支持STM32全系列的通用功能，但是在使用时依然要做一些小小的改动，具体示例如下：
+虽然理论上支持STM32全系列的通用功能，但是在使用时依然要做一些小小的改动，具体示例如下：
 
 1. 修改ugl.h中的头文件包含，见上文移植一节
 
@@ -235,16 +234,5 @@ version 0.8.0 alpha (2017.11.04)
 1. 对ugl.h中通用函数做出类型划分且添加了对于浮点数的支持(联合体实现)
 2. 在ugl_spi.h/.c和ugi\_uart.h/.c中添加了对单精度浮点型(float)数组的发送函数
 
-
-
-
-
-
 Copyright &copy; 张璞 长江大学电子信息学院 保留所有权利	2017.10
 
-
-
-=======
-# STM32-UGL
-User-defined General Library for STM32L4xx_F1xx_F4xx, a flexible, free &amp; open-source Software Library
->>>>>>> d958ca77df5e9c5be3a712d636a618553bb0e708
