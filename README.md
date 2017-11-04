@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ### UGL 使用说明 
 
 #### 概述(2017.10.01)
@@ -243,3 +244,7 @@ Copyright &copy; 张璞 长江大学电子信息学院 保留所有权利	2017.10
 
 
 
+=======
+# STM32-UGL
+User-defined General Library for STM32L4xx_F1xx_F4xx, a flexible, free &amp; open-source Software Library
+>>>>>>> d958ca77df5e9c5be3a712d636a618553bb0e708
