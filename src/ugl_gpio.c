@@ -44,7 +44,7 @@ uint16_t UGL_GPIO_ReadOutputData(GPIO_TypeDef* GPIOx)
  * @return 	None
  * @note	None
 **/
-void UGL_GPIO_WruteOutPutData(GPIO_TypeDef* GPIOx, uint16_t pBuffer)
+void UGL_GPIO_WriteOutPutData(GPIO_TypeDef* GPIOx, uint16_t pBuffer)
 {
 	assert_param(IS_GPIO_PORT(GPIOx));
 	GPIOx->ODR = (uint16_t)pBuffer;
