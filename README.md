@@ -237,8 +237,12 @@ version 0.8.0 alpha (2017.11.04)
 version 0.8.5 alpha (2017.11.06)
 
 1. 加入ugl_cortex.h/.c，支持软件定时器，最大数目默认为4个，可以自定义
+
 2. 在cortex组件中，支持用户自定义函数，用于在systick中断中执行
+
 3. 在ugl_conf.h中加入了新的预编译宏，将在下个版本中对预编译宏进行整理，同时提供软件定时器的测试样例和使用说明
 
-Copyright &copy; 张璞 长江大学电子信息学院 保留所有权利	2017.10
+4. 在ugl.h/.c中加入`void asser_failed_callback(uint8_t* file, uint32_t line)`函数，作为`assert_failed()`的回调函数 
+
+  Copyright &copy; 张璞 长江大学电子信息学院 保留所有权利2017.10
 

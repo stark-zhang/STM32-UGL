@@ -48,6 +48,7 @@ void UGL_STIM_Init(STIM_HandleTypeDef *stim, uint8_t _count)
 		for(uint8_t i = 0; i < stim_max_count; i++)
 		{
 			(_stim+i)->_state = STIM_IS_STANDBY;
+			*(_stim+i) = *(stim+i);
 		}
 		
 		IRQn_Enable();
@@ -70,10 +71,11 @@ void UGL_STIM_Start(STIM_HandleTypeDef *stim)
 	for( ; i < stim_max_count; i++)
 	{
 		if(stim->Instance == (_stim+i)->Instance)
+		{
+			(_stim+i)->_state = STIM_IS_WORKING;
 			break;
+		}
 	}
-	
-	(_stim+i)->_state = STIM_IS_WORKING;
 	
 	IRQn_Enable();
 }
@@ -94,15 +96,16 @@ void UGL_STIM_CheckTimer(STIM_HandleTypeDef *stim)
 	for( ; i < stim_max_count; i++)
 	{
 		if(stim->Instance == (_stim+i)->Instance)
+		{
+			(_stim+i)->_state = STIM_IS_STOPED;
+			(_stim+i)->Flag = 0;
+			
+			(_stim+i)->Init.Mode = STIM_ONCE_MODE;
+			(_stim+i)->Init.Count = 0;
+			(_stim+i)->Init.PreLoad = 0;
 			break;
+		}
 	}
-	
-	(_stim+i)->_state = STIM_IS_STOPED;
-	(_stim+i)->Flag = 0;
-	
-	(_stim+i)->Init->Mode = STIM_ONCE_MODE;
-	(_stim+i)->Init->Count = 0;
-	(_stim+i)->Init->PreLoad = 0;
 	
 	IRQn_Enable();
 }
@@ -145,16 +148,16 @@ uint8_t UGL_STIM_TimerCheck(STIM_HandleTypeDef *stim)
 **/
 static void UGL_STIM_Dec(STIM_HandleTypeDef *stim)
 {
-	if(stim->Init->PreLoad > 0)
+	if(stim->Init.PreLoad > 0)
 	{
-		if(--stim->Init->PreLoad == 0)
+		if(--stim->Init.PreLoad == 0)
 		{
 			stim->Flag = 1;
 			
 			//Automatically reload
-			if(stim->Init->Mode == STIM_AUTO_MODE)
+			if(stim->Init.Mode == STIM_AUTO_MODE)
 			{
-				stim->Init->Count = stim->Init->PreLoad;
+				stim->Init.Count = stim->Init.PreLoad;
 			}
 		}
 	}
