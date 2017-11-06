@@ -123,36 +123,36 @@
 
 3.  针对不同平台的数学库，此节在ugl_conf.h中定义，对应的源码如下
 
-   ```C++
-   /* ugl_conf.h */
-   /* STM32 HAL Macros */
-   /**
-    * Defination for ARM Math Library
-   **/
-   /*#define   ARM_MATH_CM0*/          	//ARM Math for Cortex-M0
-   /*#define   ARM_MATH_CM0PLUS*/      	//ARM Math for Cortex-M0+
-   /*#define   ARM_MATH_CM3*/          	//ARM Math for Cortex-M3
-   #define     ARM_MATH_CM4            	//ARM Math for Cortex-M4F(default)
-   /*#define   ARM_MATH_CM7*/          	//ARM Math for Cortex-M7
-   ```
+    ```C++
+    /* ugl_conf.h */
+    /* STM32 HAL Macros */
+    /**
+        * Defination for ARM Math Library
+    **/
+    /*#define   ARM_MATH_CM0*/          	//ARM Math for Cortex-M0
+    /*#define   ARM_MATH_CM0PLUS*/      	//ARM Math for Cortex-M0+
+    /*#define   ARM_MATH_CM3*/          	//ARM Math for Cortex-M3
+    #define     ARM_MATH_CM4            	//ARM Math for Cortex-M4F(default)
+    /*#define   ARM_MATH_CM7*/          	//ARM Math for Cortex-M7
+    ```
 
-   ```C++
-   /* ugl.h */
-   #include "stm32f4xx_hal.h"
-   #include "stm32f4xx_hal_conf.h"
-   #include "main.h"
-   #include "stdlib.h"
-   #include "ugl_conf.h"
+    ```C++
+    /* ugl.h */
+    #include "stm32f4xx_hal.h"
+    #include "stm32f4xx_hal_conf.h"
+    #include "main.h"
+    #include "stdlib.h"
+    #include "ugl_conf.h"
 
-   //ARM Math Library
-   #if defined(ARM_MATH_CM0) || defined(ARM_MATH_CM0PLUS) || defined(ARM_MATH_CM3) || defined(ARM_MATH_CM4) || defined(ARM_MATH_CM7)
+    //ARM Math Library
+    #if defined(ARM_MATH_CM0) || defined(ARM_MATH_CM0PLUS) || defined(ARM_MATH_CM3) || defined(ARM_MATH_CM4) || defined(ARM_MATH_CM7)
 
-   #include "arm_math.h"
+    #include "arm_math.h"
 
-   #endif /*ARM_MATH_CMx*/
-   ```
+    #endif /*ARM_MATH_CMx*/
+    ```
 
-   由此可以看到，对于Cortex-M系列，只需对应的`ARM_MATH_CMx`的注释取消掉即可使用相应的数学库，同时ugl_conf.h中关于数学库的宏，同时只能有一个取消注释或者都注释掉
+    由此可以看到，对于Cortex-M系列，只需对应的`ARM_MATH_CMx`的注释取消掉即可使用相应的数学库，同时ugl_conf.h中关于数学库的宏，同时只能有一个取消注释或者都注释掉
 
 4. 关于ugl_malloc.h/.c，暂不支持除STM32F407以外的型号
 
@@ -233,6 +233,12 @@ version 0.8.0 alpha (2017.11.04)
 
 1. 对ugl.h中通用函数做出类型划分且添加了对于浮点数的支持(联合体实现)
 2. 在ugl_spi.h/.c和ugi\_uart.h/.c中添加了对单精度浮点型(float)数组的发送函数
+
+version 0.8.5 alpha (2017.11.06)
+
+1. 加入ugl_cortex.h/.c，支持软件定时器，最大数目默认为4个，可以自定义
+2. 在cortex组件中，支持用户自定义函数，用于在systick中断中执行
+3. 在ugl_conf.h中加入了新的预编译宏，将在下个版本中对预编译宏进行整理，同时提供软件定时器的测试样例和使用说明
 
 Copyright &copy; 张璞 长江大学电子信息学院 保留所有权利	2017.10
 

@@ -47,9 +47,20 @@
 #define 	__User_Malloc		0		//defination for User's Malloc
 
 /**
+ * Defination for User's Software Timer(STIM)(User's Defination)
+**/
+#define 	__User_STIM			1		//defination for User's STIM
+
+/**
+ * Defination for User's uptime(User's Defination)
+**/
+
+#define 	__User_uptime		1		//defination for User's uptime
+
+/**
  * Defination for User Debugging(Note: it maybe conflict with other USART/UART application!)
 **/
-#define   	__Usr_UART_Debug	1		//defination for Output Debug information through UART
+#define   	__User_UART_Debug	1		//defination for Output Debug information through UART
 
 #endif /*__UGL_CONF_H*/
 

@@ -3,7 +3,7 @@
 * Author   Stark Zhang
 * Date     2017-09-30
 * Debug    None
-* version  0.7.5
+* version  0.8.5 alpha
 **/
 
 #ifndef __INCLUDES_UGL_H
@@ -12,6 +12,7 @@
 /* User-defined General Library Header File */
 
 #include "./inc/ugl.h"
+#include "./inc/ugl_cortex.h"
 
 /* Cortex-M SoftWare Modules Header Files */
 
@@ -30,7 +31,7 @@
 #endif /*__Lua_Support*/
 
 //Malloc of User
-#if (__Usr_Malloc == 1)
+#if (__User_Malloc == 1)
 
 #include "./inc/ugl_malloc.h"
 

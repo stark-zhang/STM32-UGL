@@ -11,6 +11,7 @@
 
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_conf.h"
+#include "intrinsics.h"
 #include "main.h"
 #include "stdlib.h"
 #include "ugl_conf.h"
@@ -21,6 +22,10 @@
 #include "arm_math.h"
 
 #endif /*ARM_MATH_CMx*/
+
+/* Interrupt Control */
+#define 	IRQn_Enable()	__set_PRIMASK(0)
+#define		IRQn_Disable()	__set_PRIMASK(1)
 
 /* Bit & Band Operations */
 #define BITBAND(addr, bitnum) ((addr & 0xF0000000) + 0x2000000 + ((addr & 0xFFFFF) << 5) + (bitnum << 2))

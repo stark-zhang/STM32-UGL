@@ -219,8 +219,6 @@ void UGL_Float2Uint8(float num, uint8_t* p)
         *(p+3) = *(s+0);
 }
 
-#if defined(HAL_UART_MODULE_ENABLED) && (__Usr_UART_Debug == 1)
-
 /**
  * @brief 	Reports the name of the source file and the source line number
  * 			where the assert_param error has occurred.
@@ -231,9 +229,13 @@ void UGL_Float2Uint8(float num, uint8_t* p)
 **/
 void assert_failed_callback(uint8_t* file, uint32_t line)
 {
+#if defined(HAL_UART_MODULE_ENABLED) && (__User_UART_Debug == 1)
 	printf("%s, %d \r\n", file, line);
+#else
+	__no_operation();
+#endif /*HAL_UART_MODULE_ENABLED && __Usr_UART_Debug == 1*/
 }
 
-#endif /*HAL_UART_MODULE_ENABLED && __Usr_UART_Debug == 1*/
+
 
 //EOF
