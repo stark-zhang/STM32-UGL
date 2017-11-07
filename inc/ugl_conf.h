@@ -10,17 +10,6 @@
 #ifndef __UGL_CONF_H
 #define __UGL_CONF_H
 
-/* STM32 HAL Macros */
-/**
- * Defination for ARM Math Library
-**/
-/*#define   ARM_MATH_CM0*/          	//ARM Math for Cortex-M0
-/*#define   ARM_MATH_CM0PLUS*/      	//ARM Math for Cortex-M0+
-/*#define   ARM_MATH_CM3*/          	//ARM Math for Cortex-M3
-#define     ARM_MATH_CM4            	//ARM Math for Cortex-M4F(default)
-/*#define   ARM_MATH_CM7*/          	//ARM Math for Cortex-M7
-
-
 /**
  * Defination for Parameters Checking(Forced Open HAL Assert)
 **/

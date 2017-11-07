@@ -200,23 +200,68 @@ void UGL_Buffer_Flush(uint8_t* pBuffer, uint16_t Length)
 }
 
 /**
- * @brief	Float converts to uint8_t(char arr)
- * @param	float num
-				num will be converted
- * @param	uint8_t* p
-				pointer to string after converting
+ * @brief	float converts to uint8_t(in arr)
+ * @param	float* p1_Buffer
+				float array to convert
+ * @param	uint16_t f_size
+				size of float array
+ * @param	uint8_t* p2_Buffer
+				integer array after converting
+ * @param	uint32_t i_size
+				size of integer array
  * @return	None
- * @note	it also can be used for integer converting, but fbit must be zero
+ * @note	i_size >= 4 * f_size
 **/
-void UGL_Float2Uint8(float num, uint8_t* p)
+void UGL_Float2Uint8_t(float* p1_Buffer, uint16_t f_size, uint8_t* p2_Buffer, uint32_t i_size)
 {
-        uint8_t* s = 0;
-        s = (uint8_t*)&num;
+	if(i_size < f_size * 4)
+		return;
+	
+	UGL_Float2Uint8_TypeDef temp[f_size];
+	uint32_t k = 0;
 
-        *(p+0) = *(s+3);
-        *(p+1) = *(s+2);
-        *(p+2) = *(s+1);
-        *(p+3) = *(s+0);
+	for(uint16_t i = 0; i < f_size; i++)
+	{
+		temp[i].f_num = *(p1_Buffer+i);
+		
+		for(uint8_t j = 0; j < sizeof(float); j++)
+		{
+			*(p2_Buffer+k) = temp[i].arr[j];
+			k++;
+		}
+	}
+}
+
+/**
+ * @brief	uint8_t converts to float(in arr)
+ * @param	uint8_t* p1_Buffer
+				integer array to convert
+ * @param	uint32_t i_size
+				size of integer array
+ * @param	float* p2_Buffer
+				float array after converting
+ * @param	uint16_t f_size
+				size of float array
+ * @return	None
+ * @note	i_size >= 4 * f_size
+**/
+void UGL_Uint8_t2Float(uint8_t* p1_Buffer, uint32_t i_size, float* p2_Buffer, uint16_t f_size)
+{
+	if(i_size < f_size * 4)
+		return;
+	
+	UGL_Float2Uint8_TypeDef temp[f_size];
+	uint32_t k = 0;
+	
+	for(uint16_t i = 0; i < f_size; i++)
+	{
+		for(uint8_t j = 0; j < sizeof(float); j++)
+		{
+			temp[i].arr[j] = *(p1_Buffer+k);
+			k++;
+		}
+		*(p2_Buffer+i) = temp[i].f_num;
+	}
 }
 
 /**

@@ -47,8 +47,8 @@ typedef enum
 **/
 typedef enum
 {
-	STIM_IS_STANDBY= -1,		//Stand By
-	STIM_IS_WORKING,			//Working
+	STIM_IS_WORKING= -1,		//Working
+	STIM_IS_STANDBY,			//Stand By
 	STIM_IS_STOPED,				//Stoped
 }UGL_STIM_StateTypeDef;
 
@@ -68,7 +68,7 @@ typedef struct
 typedef struct 
 {
 	uint8_t Instance;					//STIM ID
-	UGL_STIM_InitTypeDef *Init;			//Init
+	UGL_STIM_InitTypeDef Init;			//Init
 	__IO uint8_t Flag;					//Overflow flag(1 is for overflow)
 	__IO UGL_STIM_StateTypeDef _state; 	//STIM Work State
 }STIM_HandleTypeDef;
