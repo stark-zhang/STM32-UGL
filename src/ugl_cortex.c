@@ -47,6 +47,7 @@ void UGL_STIM_Init(STIM_HandleTypeDef *stim, uint8_t _count)
 		
 		for(uint8_t i = 0; i < stim_max_count; i++)
 		{
+			(stim+i)->Init.Count = (stim+i)->Init.PreLoad;
 			(_stim+i)->_state = STIM_IS_STANDBY;
 			*(_stim+i) = *(stim+i);
 		}
@@ -64,11 +65,9 @@ void UGL_STIM_Init(STIM_HandleTypeDef *stim, uint8_t _count)
 **/
 void UGL_STIM_Start(STIM_HandleTypeDef *stim)
 {
-	static uint8_t i = 0;
-	
 	IRQn_Disable();
 	
-	for( ; i < stim_max_count; i++)
+	for(uint8_t i = 0; i < stim_max_count; i++)
 	{
 		if(stim->Instance == (_stim+i)->Instance)
 		{
@@ -87,13 +86,11 @@ void UGL_STIM_Start(STIM_HandleTypeDef *stim)
  * @return	None
  * @note	None
 **/
-void UGL_STIM_CheckTimer(STIM_HandleTypeDef *stim)
+void UGL_STIM_Stop(STIM_HandleTypeDef *stim)
 {
-	static uint8_t i = 0;
-	
 	IRQn_Disable();
 	
-	for( ; i < stim_max_count; i++)
+	for(uint8_t i = 0; i < stim_max_count; i++)
 	{
 		if(stim->Instance == (_stim+i)->Instance)
 		{
@@ -148,9 +145,9 @@ uint8_t UGL_STIM_TimerCheck(STIM_HandleTypeDef *stim)
 **/
 static void UGL_STIM_Dec(STIM_HandleTypeDef *stim)
 {
-	if(stim->Init.PreLoad > 0)
+	if(stim->Init.Count > 0)
 	{
-		if(--stim->Init.PreLoad == 0)
+		if(--stim->Init.Count == 0)
 		{
 			stim->Flag = 1;
 			
