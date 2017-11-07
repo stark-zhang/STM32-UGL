@@ -12,7 +12,7 @@
 //General Functions with UART
 
 /* Retarget C Library */
-#if (__Usr_UART_Debug == 1)
+#if (__User_UART_Debug == 1)
 
 #ifdef __GNUC__
 /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printfset to 'Yes') calls __io_putchar() */
