@@ -124,19 +124,6 @@
 3.  针对不同平台的数学库，此节在ugl_conf.h中定义，对应的源码如下
 
     ```C++
-    /* ugl_conf.h */
-    /* STM32 HAL Macros */
-    /**
-        * Defination for ARM Math Library
-    **/
-    /*#define   ARM_MATH_CM0*/          	//ARM Math for Cortex-M0
-    /*#define   ARM_MATH_CM0PLUS*/      	//ARM Math for Cortex-M0+
-    /*#define   ARM_MATH_CM3*/          	//ARM Math for Cortex-M3
-    #define     ARM_MATH_CM4            	//ARM Math for Cortex-M4F(default)
-    /*#define   ARM_MATH_CM7*/          	//ARM Math for Cortex-M7
-    ```
-
-    ```C++
     /* ugl.h */
     #include "stm32f4xx_hal.h"
     #include "stm32f4xx_hal_conf.h"
@@ -152,7 +139,7 @@
     #endif /*ARM_MATH_CMx*/
     ```
 
-    由此可以看到，对于Cortex-M系列，只需对应的`ARM_MATH_CMx`的注释取消掉即可使用相应的数学库，同时ugl_conf.h中关于数学库的宏，同时只能有一个取消注释或者都注释掉
+    由此可以看到，对于Cortex-M系列，只需在程序预处理器(Preprocesser)中添加对应的`ARM_MATH_CMx`即可使用相应的数学库，同时只能存在一个宏
 
 4. 关于ugl_malloc.h/.c，暂不支持除STM32F407以外的型号
 
@@ -250,6 +237,7 @@ version 0.8.7 alpha (2017.11.07)
 
 1. 修改了STIM工作状态的枚举定义
 2. 在ugl.h/.c中加入浮点数和整形转换的函数，即利用共用体将浮点数在内存中的二进制表示取出/放回，实现类型转换，以便通信接口发送/接收浮点流
+3. 修改了使用DSP库的bug, 修改关于ARM DSP库的使用说明
 
 Copyright &copy; 张璞 长江大学电子信息学院 保留所有权利2017.10
 

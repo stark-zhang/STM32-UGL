@@ -285,6 +285,4 @@ void assert_failed_callback(uint8_t* file, uint32_t line)
 #endif /*HAL_UART_MODULE_ENABLED && __Usr_UART_Debug == 1*/
 }
 
-
-
 //EOF
