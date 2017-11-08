@@ -216,18 +216,20 @@ void UGL_Float2Uint8_t(float* p1_Buffer, uint16_t f_size, uint8_t* p2_Buffer, ui
 {
 	if(i_size < f_size * 4)
 		return;
-	
-	UGL_Float2Uint8_TypeDef temp[f_size];
-	uint32_t k = 0;
-
-	for(uint16_t i = 0; i < f_size; i++)
+	else
 	{
-		temp[i].f_num = *(p1_Buffer+i);
-		
-		for(uint8_t j = 0; j < sizeof(float); j++)
+		UGL_Float2Uint8_TypeDef temp[f_size];
+		uint32_t k = 0;
+
+		for(uint16_t i = 0; i < f_size; i++)
 		{
-			*(p2_Buffer+k) = temp[i].arr[j];
-			k++;
+			temp[i].f_num = *(p1_Buffer+i);
+			
+			for(uint8_t j = 0; j < sizeof(float); j++)
+			{
+				*(p2_Buffer+k) = temp[i].arr[j];
+				k++;
+			}
 		}
 	}
 }
@@ -249,18 +251,20 @@ void UGL_Uint8_t2Float(uint8_t* p1_Buffer, uint32_t i_size, float* p2_Buffer, ui
 {
 	if(i_size < f_size * 4)
 		return;
-	
-	UGL_Float2Uint8_TypeDef temp[f_size];
-	uint32_t k = 0;
-	
-	for(uint16_t i = 0; i < f_size; i++)
+	else
 	{
-		for(uint8_t j = 0; j < sizeof(float); j++)
+		UGL_Float2Uint8_TypeDef temp[f_size];
+		uint32_t k = 0;
+		
+		for(uint16_t i = 0; i < f_size; i++)
 		{
-			temp[i].arr[j] = *(p1_Buffer+k);
-			k++;
+			for(uint8_t j = 0; j < sizeof(float); j++)
+			{
+				temp[i].arr[j] = *(p1_Buffer+k);
+				k++;
+			}
+			*(p2_Buffer+i) = temp[i].f_num;
 		}
-		*(p2_Buffer+i) = temp[i].f_num;
 	}
 }
 
