@@ -1,7 +1,7 @@
 /**
  * Title	UGL Module Cortex_Mx User Header files(HardWare Core Modules)
  * Author	Stark Zhang
- * Date		2017-11-05
+ * Date		2017-11-09
  * Debug	None
 **/
 
@@ -21,8 +21,8 @@
  *
 ******************************************************************************/
 
-#ifndef __UGL_CORTEX_H
-#define __UGL_CORTEX_H
+#ifndef __UGL_CORTEX2_H
+#define __UGL_CORTEX2_H
 
 #include "ugl.h"
 
@@ -53,13 +53,12 @@ typedef enum
 }UGL_STIM_StateTypeDef;
 
 /**
- * STIM Initialization strucure
+ * STIM Initialization structure
 **/
 typedef struct
 {
-	__IO UGL_STIM_ModeTypDef Mode;	//Working mode, default is once
-	__IO uint32_t Count;			//Timer Count
-	__IO uint32_t PreLoad;			//Timer Preload value
+	__IO UGL_STIM_ModeTypDef _mode;		//Working mode, default is once
+	__IO uint32_t _preload;				//Timer Preload value
 }UGL_STIM_InitTypeDef;
 
 /**
@@ -67,9 +66,10 @@ typedef struct
 **/
 typedef struct 
 {
-	uint8_t Instance;					//STIM ID
-	UGL_STIM_InitTypeDef Init;			//Init
-	__IO uint8_t Flag;					//Overflow flag(1 is for overflow)
+	uint8_t _instance;					//STIM ID
+	__IO uint8_t _overflow_flag;		//Overflow Flag
+	__IO uint32_t _count;				//Count
+	__IO UGL_STIM_InitTypeDef _init;	//Init
 	__IO UGL_STIM_StateTypeDef _state; 	//STIM Work State
 }STIM_HandleTypeDef;
 
@@ -94,6 +94,6 @@ extern void UGL_Cortex_IDLE(void);
 /* Systick interrupt callback */
 extern void HAL_SYSTICK_Callback(void);
 
-#endif /*__UGL_CORTEX_H*/
+#endif /*__UGL_CORTEX2_H*/
 
 //EOF

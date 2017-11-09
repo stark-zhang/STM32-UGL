@@ -3,7 +3,7 @@
 * Author   Stark Zhang
 * Date     2017-09-30
 * Debug    None
-* version  0.8.7 alpha
+* version  0.8.7 beta
 **/
 
 #ifndef __INCLUDES_UGL_H
