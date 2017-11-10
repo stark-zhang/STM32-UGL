@@ -9,15 +9,13 @@ int main(void)
     int32_t tim = 0;                        //RunTime
 
     //STIM Init
-    uSTIM[0].Instance = 0x00;
-	uSTIM[0].Init.Mode = STIM_ONCE_MODE;
-	uSTIM[0].Init.PreLoad = 200-1;
-	uSTIM[0]._state = STIM_IS_STANDBY;
+    uSTIM[0]._instance = 0x00;
+	uSTIM[0]._init._mode = STIM_ONCE_MODE;
+	uSTIM[0]._init._preload = 200-1;
 	
-	uSTIM[1].Instance = 0x01;
-	uSTIM[1].Init.Mode = STIM_AUTO_MODE;
-	uSTIM[1].Init.PreLoad = 500-1;
-	uSTIM[1]._state = STIM_IS_STANDBY;
+	uSTIM[1]._instance = 0x01;
+	uSTIM[1]._init._mode = STIM_AUTO_MODE;
+	uSTIM[1]._init._preload = 500-1;
 	
 	UGL_STIM_Init(uSTIM, 2);
 	UGL_STIM_Start(uSTIM);
