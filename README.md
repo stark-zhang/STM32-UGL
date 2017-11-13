@@ -180,7 +180,7 @@ version 0.3.0（2017.09.24）
 version 0.3.1（2017.09.26）
 
 1. 添加了DMA模式下SPI的读写函数
-2. 开始整理ugl_mdk.h/.c和ugl_gcc.h/.c，完成时间未定
+2. ~~开始整理ugl_mdk.h/.c和ugl_gcc.h/.c，完成时间未定~~
 
 version 0.4.1（2017.10.01）
 
