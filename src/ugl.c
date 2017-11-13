@@ -8,9 +8,6 @@
 
 #include "../inc/ugl.h"
 
-/* Variables for UGL_Delay Function */
-static uint8_t fac_us = 0;
-
 /* General Functions */
 
 /**
@@ -30,7 +27,7 @@ void UGL_Delay_us(uint32_t nus)
 #if (__User_STIM != 1)
 	uint32_t temp;
 	//Get System Clock Frequency(in MHz)
-	fac_us = HAL_RCC_GetSysClockFreq() / 1000000 / 8;
+	uint8_t fac_us = HAL_RCC_GetSysClockFreq() / 1000000 / 8;
 	SysTick->LOAD = nus*fac_us;   		 
 	SysTick->VAL = 0x00;
 	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; 	 
@@ -266,7 +263,7 @@ void UGL_Uint8_t2Float(uint8_t* p1_Buffer, uint32_t i_size, float* p2_Buffer, ui
  * @return 	None
  * @note	Set UART & ugl_conf.h before using it
 **/
-inline void assert_failed_callback(uint8_t* file, uint32_t line)
+void assert_failed_callback(uint8_t* file, uint32_t line)
 {
 #if defined(HAL_UART_MODULE_ENABLED) && (__User_UART_Debug == 1)
 	printf("%s, %d \r\n", file, line);
