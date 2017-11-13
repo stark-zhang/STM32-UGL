@@ -3,7 +3,7 @@
 * Author   Stark Zhang
 * Date     2017-09-30
 * Debug    None
-* version  0.8.7 beta
+* version  0.9.0 alpha
 **/
 
 #ifndef __INCLUDES_UGL_H
@@ -73,29 +73,6 @@
 #include "./inc/ugl_usart.h"
 
 #endif /*HAL_USART_MODULE_ENABLED*/
-
-/* Compilers Special functions(optional) */
-
-//ARM(MDK)
-#ifdef __CC_ARM
-
-#include "./inc/ugl_mdk.h"
-
-#endif /*__CC_ARM*/
-
-//GNU ARM
-#ifdef __GNUC__
-
-#include "./inc/ugl_gcc.h"
-
-#endif /*__GNUC__*/
-
-//IAR for ARM
-#ifdef __ICCARM__
-
-#include "./inc/ugl_iar.h"
-
-#endif /*__ICCARM__*/
 
 #endif /*__INCLUDES_UGL_H*/
 
