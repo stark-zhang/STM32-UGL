@@ -8,15 +8,6 @@
 
 #include "../inc/ugl.h"
 
-/* for difference of ASM with every Compiler */
-#if defined(__CC_AARM)              //for ARM MDK
-#include "../inc/ugl_mdk.h"
-#elif defined(__GNUC__)             //for GCC ARM
-#include "../inc/ugl_gcc.h"
-#elif defined(__ICCARM__)           //for IAR ARM
-#include "../inc/ugl_iar.h"
-#endif  /*Compilers*/
-
 /* Variables for UGL_Delay Function */
 static uint8_t fac_us = 0;
 
@@ -32,10 +23,11 @@ static uint8_t fac_us = 0;
  * @func	void UGL_Delay_us()
  * @param	uint32_t nus
  * @return 	None
- * @note	nus <= 798915us(2^24/fac_us @fac_us=21)
+ * @note	nus <= 798915us(2^24/fac_us @fac_us=21) & if STIM is enabled, this function will be given up
 **/
 void UGL_Delay_us(uint32_t nus)
 {
+#if (__User_STIM != 1)
 	uint32_t temp;
 	//Get System Clock Frequency(in MHz)
 	fac_us = HAL_RCC_GetSysClockFreq() / 1000000 / 8;
@@ -47,7 +39,10 @@ void UGL_Delay_us(uint32_t nus)
 		temp = SysTick->CTRL;
 	}while((temp&0x01) && !(temp&(1<<16)));   
 	SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
-	SysTick->VAL = 0X00;     
+	SysTick->VAL = 0X00;  
+#else
+	__no_operation();
+#endif /*__User_STIM == 1*/
 }
 
 /**
@@ -56,7 +51,7 @@ void UGL_Delay_us(uint32_t nus)
  * @return	None
  * @note	None
 **/
-void UGL_Soft_Reset(void)
+inline void UGL_Soft_Reset(void)
 {
 	SCB->AIRCR =0X05FA0000|(uint32_t)0x04;
 }
@@ -67,14 +62,9 @@ void UGL_Soft_Reset(void)
  * @return	None
  * @note	None
 **/
-void UGL_Sys_Standby(void)
+inline void UGL_Sys_Standby(void)
 {
-	SCB->SCR 		|= 1 << 2;   
-	RCC->APB1ENR 	|= 1 << 28;
-	PWR->CSR 		|= 1 << 8;
-	PWR->CR 		|= 1 << 2;
-	PWR->CR 		|= 1 << 1;  	
-	ASM_WFI_Set();
+	HAL_PWR_EnterSTANDBYMode();
 }
 
 /**
@@ -276,7 +266,7 @@ void UGL_Uint8_t2Float(uint8_t* p1_Buffer, uint32_t i_size, float* p2_Buffer, ui
  * @return 	None
  * @note	Set UART & ugl_conf.h before using it
 **/
-void assert_failed_callback(uint8_t* file, uint32_t line)
+inline void assert_failed_callback(uint8_t* file, uint32_t line)
 {
 #if defined(HAL_UART_MODULE_ENABLED) && (__User_UART_Debug == 1)
 	printf("%s, %d \r\n", file, line);
