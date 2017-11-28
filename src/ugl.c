@@ -8,18 +8,6 @@
 
 #include "../inc/ugl.h"
 
-/* for difference of ASM with every Compiler */
-#if defined(__CC_AARM)              //for ARM MDK
-#include "../inc/ugl_mdk.h"
-#elif defined(__GNUC__)             //for GCC ARM
-#include "../inc/ugl_gcc.h"
-#elif defined(__ICCARM__)           //for IAR ARM
-#include "../inc/ugl_iar.h"
-#endif  /*Compilers*/
-
-/* Variables for UGL_Delay Function */
-static uint8_t fac_us = 0;
-
 /* General Functions */
 
 /**
@@ -32,13 +20,14 @@ static uint8_t fac_us = 0;
  * @func	void UGL_Delay_us()
  * @param	uint32_t nus
  * @return 	None
- * @note	nus <= 798915us(2^24/fac_us @fac_us=21)
+ * @note	nus <= 798915us(2^24/fac_us @fac_us=21) & if STIM is enabled, this function will be given up
 **/
 void UGL_Delay_us(uint32_t nus)
 {
+#if (__User_STIM != 1)
 	uint32_t temp;
 	//Get System Clock Frequency(in MHz)
-	fac_us = HAL_RCC_GetSysClockFreq() / 1000000 / 8;
+	uint8_t fac_us = HAL_RCC_GetSysClockFreq() / 1000000 / 8;
 	SysTick->LOAD = nus*fac_us;   		 
 	SysTick->VAL = 0x00;
 	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; 	 
@@ -47,7 +36,10 @@ void UGL_Delay_us(uint32_t nus)
 		temp = SysTick->CTRL;
 	}while((temp&0x01) && !(temp&(1<<16)));   
 	SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
-	SysTick->VAL = 0X00;     
+	SysTick->VAL = 0X00;  
+#else
+	__no_operation();
+#endif /*__User_STIM == 1*/
 }
 
 /**
@@ -56,7 +48,7 @@ void UGL_Delay_us(uint32_t nus)
  * @return	None
  * @note	None
 **/
-void UGL_Soft_Reset(void)
+inline void UGL_Soft_Reset(void)
 {
 	SCB->AIRCR =0X05FA0000|(uint32_t)0x04;
 }
@@ -67,14 +59,9 @@ void UGL_Soft_Reset(void)
  * @return	None
  * @note	None
 **/
-void UGL_Sys_Standby(void)
+inline void UGL_Sys_Standby(void)
 {
-	SCB->SCR 		|= 1 << 2;   
-	RCC->APB1ENR 	|= 1 << 28;
-	PWR->CSR 		|= 1 << 8;
-	PWR->CR 		|= 1 << 2;
-	PWR->CR 		|= 1 << 1;  	
-	ASM_WFI_Set();
+	HAL_PWR_EnterSTANDBYMode();
 }
 
 /**
@@ -200,23 +187,72 @@ void UGL_Buffer_Flush(uint8_t* pBuffer, uint16_t Length)
 }
 
 /**
- * @brief	Float converts to uint8_t(char arr)
- * @param	float num
-				num will be converted
- * @param	uint8_t* p
-				pointer to string after converting
+ * @brief	float converts to uint8_t(in arr)
+ * @param	float* p1_Buffer
+				float array to convert
+ * @param	uint16_t f_size
+				size of float array
+ * @param	uint8_t* p2_Buffer
+				integer array after converting
+ * @param	uint32_t i_size
+				size of integer array
  * @return	None
- * @note	it also can be used for integer converting, but fbit must be zero
+ * @note	i_size >= 4 * f_size
 **/
-void UGL_Float2Uint8(float num, uint8_t* p)
+void UGL_Float2Uint8_t(float* p1_Buffer, uint16_t f_size, uint8_t* p2_Buffer, uint32_t i_size)
 {
-        uint8_t* s = 0;
-        s = (uint8_t*)&num;
+	if(i_size < f_size * 4)
+		return;
+	else
+	{
+		UGL_Float2Uint8_TypeDef temp[f_size];
+		uint32_t k = 0;
 
-        *(p+0) = *(s+3);
-        *(p+1) = *(s+2);
-        *(p+2) = *(s+1);
-        *(p+3) = *(s+0);
+		for(uint16_t i = 0; i < f_size; i++)
+		{
+			temp[i].f_num = *(p1_Buffer+i);
+			
+			for(uint8_t j = 0; j < sizeof(float); j++)
+			{
+				*(p2_Buffer+k) = temp[i].arr[j];
+				k++;
+			}
+		}
+	}
+}
+
+/**
+ * @brief	uint8_t converts to float(in arr)
+ * @param	uint8_t* p1_Buffer
+				integer array to convert
+ * @param	uint32_t i_size
+				size of integer array
+ * @param	float* p2_Buffer
+				float array after converting
+ * @param	uint16_t f_size
+				size of float array
+ * @return	None
+ * @note	i_size >= 4 * f_size
+**/
+void UGL_Uint8_t2Float(uint8_t* p1_Buffer, uint32_t i_size, float* p2_Buffer, uint16_t f_size)
+{
+	if(i_size < f_size * 4)
+		return;
+	else
+	{
+		UGL_Float2Uint8_TypeDef temp[f_size];
+		uint32_t k = 0;
+		
+		for(uint16_t i = 0; i < f_size; i++)
+		{
+			for(uint8_t j = 0; j < sizeof(float); j++)
+			{
+				temp[i].arr[j] = *(p1_Buffer+k);
+				k++;
+			}
+			*(p2_Buffer+i) = temp[i].f_num;
+		}
+	}
 }
 
 /**
@@ -235,7 +271,5 @@ void assert_failed_callback(uint8_t* file, uint32_t line)
 	__no_operation();
 #endif /*HAL_UART_MODULE_ENABLED && __Usr_UART_Debug == 1*/
 }
-
-
 
 //EOF

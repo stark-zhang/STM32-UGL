@@ -1,11 +1,11 @@
 /**
  * Title	UGL Module Cortex_Mx User Source files(HardWare Core Modules)
  * Author	Stark Zhang
- * Date		2017-11-05
+ * Date		2017-11-09
  * Debug	None
 **/
 
-#include "ugl_cortex.h"
+#include "../inc/ugl_cortex.h"
 
 /* STIM */
 #if (__User_STIM == 1)
@@ -14,7 +14,7 @@
 
 //Private Variables for STIM
 static uint8_t stim_max_count = STIM_MAX_Count;
-static STIM_HandleTypeDef _stim[STIM_MAX_Count];
+static STIM_HandleTypeDef __stim[STIM_MAX_Count];
 
 //Public Functions
 /**
@@ -37,19 +37,12 @@ void UGL_STIM_Init(STIM_HandleTypeDef *stim, uint8_t _count)
 	{
 		IRQn_Disable();
 		
-		if(_count > STIM_MAX_Count)
-		{
-			assert_failed_callback(__FILE__, __LINE__);
-			return ;
-		}
-		else
-			stim_max_count = _count;
-		
+		stim_max_count = _count;
 		for(uint8_t i = 0; i < stim_max_count; i++)
 		{
-			(stim+i)->Init.Count = (stim+i)->Init.PreLoad;
-			(_stim+i)->_state = STIM_IS_STANDBY;
-			*(_stim+i) = *(stim+i);
+			*(__stim+i) = *(stim+i);
+			(__stim+i)->_state = STIM_IS_STANDBY;
+			(__stim+i)->_count = (__stim+i)->_init._preload;
 		}
 		
 		IRQn_Enable();
@@ -69,9 +62,9 @@ void UGL_STIM_Start(STIM_HandleTypeDef *stim)
 	
 	for(uint8_t i = 0; i < stim_max_count; i++)
 	{
-		if(stim->Instance == (_stim+i)->Instance)
+		if((__stim+i)->_instance == stim->_instance)
 		{
-			(_stim+i)->_state = STIM_IS_WORKING;
+			(__stim+i)->_state = STIM_IS_WORKING;
 			break;
 		}
 	}
@@ -92,14 +85,14 @@ void UGL_STIM_Stop(STIM_HandleTypeDef *stim)
 	
 	for(uint8_t i = 0; i < stim_max_count; i++)
 	{
-		if(stim->Instance == (_stim+i)->Instance)
+		if((__stim+i)->_instance == stim->_instance)
 		{
-			(_stim+i)->_state = STIM_IS_STOPED;
-			(_stim+i)->Flag = 0;
+			(__stim+i)->_state = STIM_IS_STOPED;
+			(__stim+i)->_overflow_flag = 0;
 			
-			(_stim+i)->Init.Mode = STIM_ONCE_MODE;
-			(_stim+i)->Init.Count = 0;
-			(_stim+i)->Init.PreLoad = 0;
+			(__stim+i)->_init._mode = STIM_ONCE_MODE;
+			(__stim+i)->_count = 0;
+			(__stim+i)->_init._preload = 0;
 			break;
 		}
 	}
@@ -122,13 +115,13 @@ uint8_t UGL_STIM_TimerCheck(STIM_HandleTypeDef *stim)
 	
 	for( ; i < stim_max_count; i++)
 	{
-		if(stim->Instance == (_stim+i)->Instance)
+		if((__stim+i)->_instance == stim->_instance)
 			break;
 	}
 	
-	if((_stim+1)->Flag == 1)
+	if((__stim+i)->_overflow_flag == 1)
 	{
-		(_stim+1)->Flag = 0;
+		(__stim+i)->_overflow_flag = 0;
 		return 1;
 	}
 	else return 0;
@@ -145,17 +138,20 @@ uint8_t UGL_STIM_TimerCheck(STIM_HandleTypeDef *stim)
 **/
 static void UGL_STIM_Dec(STIM_HandleTypeDef *stim)
 {
-	if(stim->Init.Count > 0)
+	if(stim->_count > 0)
 	{
-		if(--stim->Init.Count == 0)
+		if(--stim->_count == 0)
 		{
-			stim->Flag = 1;
+			stim->_overflow_flag = 1;
 			
 			//Automatically reload
-			if(stim->Init.Mode == STIM_AUTO_MODE)
-			{
-				stim->Init.Count = stim->Init.PreLoad;
-			}
+			if(stim->_init._mode == STIM_AUTO_MODE)
+				stim->_count = stim->_init._preload;
+			//once mode, STIM will be set as standby after timing finished
+			else if(stim->_init._mode == STIM_ONCE_MODE)
+				stim->_state = STIM_IS_STANDBY;
+			//no operation
+			else __no_operation();
 		}
 	}
 }
@@ -249,8 +245,8 @@ void HAL_SYSTICK_Callback(void)
 	
 	for(uint8_t i = 0; i < stim_max_count; i++)
 	{
-		if((_stim+i)->_state == STIM_IS_WORKING)
-			UGL_STIM_Dec(_stim+i);
+		if((__stim+i)->_state == STIM_IS_WORKING)
+			UGL_STIM_Dec(__stim+i);
 		else continue;
 	}
 	

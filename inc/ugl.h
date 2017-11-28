@@ -11,7 +11,6 @@
 
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_conf.h"
-#include "intrinsics.h"
 #include "main.h"
 #include "stdlib.h"
 #include "ugl_conf.h"
@@ -93,6 +92,16 @@ typedef enum {
 	Operate_DMA,
 } UGL_Operate_Mode;
 
+/**
+ * Defination of Float2Uint8 Union
+**/
+typedef union{
+	uint8_t arr[4];
+	float f_num;
+}UGL_Float2Uint8_TypeDef;
+
+
+
 /* General Core Functions */
 extern void UGL_Delay_us(uint32_t nus);
 extern void UGL_Soft_Reset(void);
@@ -105,8 +114,9 @@ extern void UGL_Float2String(float data, uint8_t* str, uint8_t fbit, uint8_t mod
 extern uint16_t UGL_Buffer_Compare(uint8_t *pBuffer1, uint8_t *pBuffer2, uint16_t Length);
 extern void UGL_Buffer_Flush(uint8_t* pBuffer, uint16_t Length);
 
-//float/int32_t/uint32_t to uint8_t
-void UGL_Float2Uint8(float num, uint8_t *p);
+//float <----> uint8_t
+extern void UGL_Float2Uint8_t(float* p1_Buffer, uint16_t f_size, uint8_t* p2_Buffer, uint32_t i_size);
+extern void UGL_Uint8_t2Float(uint8_t* p1_Buffer, uint32_t i_size, float* p2_Buffer, uint16_t f_size);
 
 //STM32 HAL Assert Function
 extern void assert_failed_callback(uint8_t* file, uint32_t line);
