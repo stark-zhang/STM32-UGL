@@ -3,7 +3,7 @@
 * Author   Stark Zhang
 * Date     2017-09-30
 * Debug    None
-* version  0.9.0 alpha
+* version  0.9.5
 **/
 
 #ifndef __INCLUDES_UGL_H
@@ -59,6 +59,13 @@
 #include "./inc/ugl_spi.h"
 
 #endif /*HAL_SPI_MODULE_ENABLED*/
+
+//SRAM(External)
+#ifdef HAL_SRAM_MODULE_ENABLED
+
+#include "./inc/ugl_sram.h"
+
+#endif /*HAL_SRAM_MODULE_ENABLED*/
 
 //UART
 #ifdef HAL_UART_MODULE_ENABLED
